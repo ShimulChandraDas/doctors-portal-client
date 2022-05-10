@@ -1,4 +1,5 @@
 import React from 'react';
+import Footer from '../Shared/Footer';
 import Banner from './Banner/Banner';
 import ContactUs from './ContactUs/ContactUs';
 import Exceptional from './Exceptional/Exceptional';
@@ -10,7 +11,7 @@ import Testimonial from './Testimonial/Testimonial';
 
 const Home = () => {
     return (
-        <div className='px-12 bg-primary-content '>
+        <div className='px-12'>
             <Banner />
             <Info />
             <Services />
@@ -18,6 +19,7 @@ const Home = () => {
             <MakeAppoinment />
             <Testimonial />
             <ContactUs />
+            <Footer />
         </div>
     );
 };
