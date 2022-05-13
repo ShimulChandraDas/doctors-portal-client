@@ -1,9 +1,10 @@
 import React, { useEffect } from 'react';
-import { useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
+import { useSendPasswordResetEmail, useSignInWithEmailAndPassword, useSignInWithGoogle } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init'
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { async } from '@firebase/util';
 
 
 const Login = () => {
@@ -16,11 +17,14 @@ const Login = () => {
         loading,
         error,
     ] = useSignInWithEmailAndPassword(auth);
+    const [sendPasswordResetEmail, sending, verificationError] = useSendPasswordResetEmail(auth);
     let signInError;
 
     const location = useLocation()
     const navigate = useNavigate()
     let from = location.state?.from?.pathname || "/";
+
+
 
 
     useEffect(() => {
@@ -30,11 +34,11 @@ const Login = () => {
         }
     }, [user, gUser, from, navigate])
 
-    if (loading || gLoading) {
+    if (loading || gLoading || sending) {
         return <Loading />
 
     }
-    if (error || gError) {
+    if (error || gError || verificationError) {
         signInError = <p className='text-red-500'><small>{error?.message || gError?.message}</small></p>
     }
 
@@ -43,10 +47,13 @@ const Login = () => {
     const onSubmit = data => {
         console.log(data);
         signInWithEmailAndPassword(data.email, data.password)
-
-
-
+        alert('Sent email');
     }
+    //implement
+    // const resetEmail = async data => {
+    //     await sendPasswordResetEmail(data.email);
+
+    // }
     return (
         <div className='flex h-screen justify-center items-center '>
             <div className="card w-96 bg-base-100 shadow-xl">
@@ -104,7 +111,13 @@ const Login = () => {
                         <input className='btn w-full max-w-xs' type="submit" value={"Login"} />
 
                     </form>
+                    {/* <small><button
+                        onClick={resetEmail}
+                        className='text-red-500'>Forget password? </button></small> */}
                     <p><small>New to doctors Portal? <Link to="/signup" className='text-secondary'>Create New Account</Link></small></p>
+
+
+
 
                     <div className="divider">OR</div>
                     <button

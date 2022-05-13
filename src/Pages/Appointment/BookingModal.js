@@ -2,19 +2,54 @@ import { format } from 'date-fns';
 import React from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import auth from '../../firebase.init';
+import { toast } from 'react-toastify';
+
 
 const BookingModal = ({ date, treatment, setTreatment }) => {
     const { _id, name, slots } = treatment;
     const [user, loading, error] = useAuthState(auth);
 
+    const formattedDate = format(date, 'PPP');
+
     const handleBooking = event => {
         event.preventDefault();
         const slot = event.target.slot.value;
-        console.log(slot);
+        //console.log(slot);
 
 
+        const booking = {
+            treatmentId: _id,
+            treatment: name,
+            date: formattedDate,
+            slot,
+            patient: user.email,
+            patientName: user.displayName,
+            phone: event.target.phone.value
 
-        setTreatment(null);
+        }
+
+        fetch(`http://localhost:5000/booking`, {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json'
+            },
+            body: JSON.stringify(booking)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log(data);
+
+                if (data.success) {
+                    toast(`Appointment is set in ${formattedDate} at ${slot} `)
+                }
+                else {
+                    toast.error(`You Already have an Appointment is set in ${data.booking?.date} at ${data.booking?.slot} `)
+
+                }
+                //to  close the modal
+                setTreatment(null);
+            });
+
     }
 
 
@@ -26,7 +61,7 @@ const BookingModal = ({ date, treatment, setTreatment }) => {
                     <label htmlFor="booking-modal" className="btn btn-sm btn-circle absolute right-2 top-2">✕</label>
                     <h3 className="font-bold text-center text-lg text-secondary">Booking for {name}</h3>
                     <form onSubmit={handleBooking} className='grid grid-cols-1 mt-2 gap-4 justify-items-center'>
-                        <input type="text" disabled value={format(date, 'pp')} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
+                        <input type="text" disabled value={format(date, 'PPP')} placeholder="Type here" className="input input-bordered w-full max-w-xs" />
                         <select name='slot' className="select select-bordered w-full max-w-xs">
                             {
                                 slots.map((slot, index) => <option
