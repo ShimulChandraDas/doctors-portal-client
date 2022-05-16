@@ -4,7 +4,7 @@ import auth from '../../firebase.init'
 import { useForm } from "react-hook-form";
 import Loading from '../Shared/Loading';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { async } from '@firebase/util';
+import useToken from '../../Hooks/useToken';
 
 
 const Login = () => {
@@ -18,6 +18,8 @@ const Login = () => {
         error,
     ] = useSignInWithEmailAndPassword(auth);
     const [sendPasswordResetEmail, sending, verificationError] = useSendPasswordResetEmail(auth);
+
+    const [token] = useToken(user || gUser)
     let signInError;
 
     const location = useLocation()
@@ -28,11 +30,11 @@ const Login = () => {
 
 
     useEffect(() => {
-        if (user || gUser) {
-            console.log(gUser, user);
+        if (token) {
+            //console.log(gUser, user);
             navigate(from, { replace: true });
         }
-    }, [user, gUser, from, navigate])
+    }, [token, from, navigate])
 
     if (loading || gLoading || sending) {
         return <Loading />
@@ -47,7 +49,7 @@ const Login = () => {
     const onSubmit = data => {
         console.log(data);
         signInWithEmailAndPassword(data.email, data.password)
-        alert('Sent email');
+        //alert('Sent email');
     }
     //implement
     // const resetEmail = async data => {
