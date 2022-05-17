@@ -5,7 +5,7 @@ const UserRow = ({ user, refetch }) => {
     const { email, role } = user;
     const makeAdmin = () => {
         fetch(`https://limitless-mountain-98507.herokuapp.com/user/admin/${email}`, {
-            method: 'PUT',
+            method: 'GET',
             headers: {
                 authorization: ` bearer ${localStorage.getItem('accessToken')}`
             }
