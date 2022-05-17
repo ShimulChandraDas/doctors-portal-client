@@ -45,7 +45,6 @@ const SignUp = () => {
         await updateProfile({ displayName: data.name });
         console.log('update name')
         //navigate('/appointment')
-
     }
     return (
         <div className='flex h-screen justify-center items-center '>

@@ -12,7 +12,7 @@ const AvailableAppointments = ({ date }) => {
 
 
     // useEffect(() => {
-    //     fetch(`http://localhost:5000/available?date=${formattedDate}`)
+    //     fetch(`https://limitless-mountain-98507.herokuapp.com/available?date=${formattedDate}`)
     //         .then(res => res.json())
     //         .then(data => {
     //             console.log(data)
@@ -23,7 +23,7 @@ const AvailableAppointments = ({ date }) => {
     const formattedDate = format(date, 'PPP');
 
     const { data: services, isLoading, refetch } = useQuery(['/available', formattedDate], () =>
-        fetch(`http://localhost:5000/available?date=${formattedDate}`)
+        fetch(`https://limitless-mountain-98507.herokuapp.com/available?date=${formattedDate}`)
             .then(res => res.json())
     )
     if (isLoading) {
